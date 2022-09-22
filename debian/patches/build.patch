@@ -1,0 +1,240 @@
+Description: remove useless targets in ant build files
+Author: Pierre Gruet <pgt@debian.org>
+Forwarded: not-needed
+Last-Update: 2021-08-29
+
+--- a/build.xml
++++ b/build.xml
+@@ -20,25 +20,4 @@
+ 
+ 	<!-- Import the common_build.xml file which contains all the default tasks -->
+ 	<import file="${common.build.file}"/>
+-
+-    <!--
+-      AS STATED ABOVE, THE ONLY TASKS THAT SHOULD EXIST IN THIS BUILD FILE ARE
+-      THE TASKS THAT NEED TO DIFFER FROM THE DEFAULT IMPLEMENTATION OF THE TASKS
+-      FOUND IN common_build.xml.
+-    --> 
+-
+-	<target name="dist" description="Creates all the distributable items for this project" >
+-		<ant antfile="${common.build.file}" target="dist" />
+-		
+-		<!-- Create the required zip distribution which contains the entire project -->
+-		<zip destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}.zip">
+-			<fileset dir="${basedir}">
+-				<exclude name="bin/" />
+-				<exclude name="dist/" />
+-				<exclude name="eclipse-bin/" />
+-			</fileset>
+-			<zipfileset dir="${dist.dir}" includes="**/*.jar" />
+-		</zip>
+-	</target>
+-
+ </project>
+--- a/common_build.xml
++++ b/common_build.xml
+@@ -301,25 +301,19 @@
+ 
+   <!-- Setup the compile classpath -->
+   <path id="classpath">
+-    <fileset dir="${devlib.dir}">
+-      <include name="*.jar" />
+-    </fileset>
+-    <fileset dir="${lib.dir}">
+-      <include name="*.jar" />
+-    </fileset>
++    <pathelement location="/usr/share/java/commons-logging.jar" />
++    <pathelement location="/usr/share/java/itext.jar" />
++    <pathelement location="/usr/share/java/libbase.jar" />
++    <pathelement location="/usr/share/java/libloader.jar" />
+   </path>
+ 
+   <!-- Setup the classpath used for testing -->
+   <path id="test.classpath">
+-    <fileset dir="${devlib.dir}">
+-      <include name="*" />
+-    </fileset>
+-    <fileset dir="${lib.dir}">
+-      <include name="*.jar" />
+-    </fileset>
+-    <fileset dir="${testlib.dir}">
+-      <include name="*.jar" />
+-    </fileset>
++    <pathelement location="/usr/share/java/commons-logging.jar" />
++    <pathelement location="/usr/share/java/itext.jar" />
++    <pathelement location="/usr/share/java/libbase.jar" />
++    <pathelement location="/usr/share/java/libloader.jar" />
++    <pathelement location="/usr/share/java/junit.jar" />
+     <dirset dir="${classes.dir}" />
+     <dirset dir="${testclasses.dir}" />
+   </path>
+@@ -481,8 +475,7 @@
+     
+         Prints and sets the SVN revision for the repository at the current dir (if svn.revision is not set)
+         ====================================================================-->
+-  <target name="svn-revision"
+-          depends="install-svnant">
++  <target name="svn-revision">
+ 
+     <svn javahl="${svnant.use-javahl}" svnkit="${svnant.use-svnkit}">
+       <status path="." revisionProperty="svn.revision" />
+@@ -497,7 +490,7 @@
+         Sets a property build.id to the either "development" or the svn revision
+         if in release mode
+         ====================================================================-->
+-  <target name="set-build.id" unless="build.id" depends="install-antcontrib">
++  <target name="set-build.id" unless="build.id">
+     <if>
+       <istrue value="${release}" />
+       <then>
+@@ -602,7 +595,7 @@
+ 	    Verifies that there are no SNAPSHOT dependencies defined in the ivy xml.
+ 	    If there are SNAPSHOTS, fail the release build.
+ 	    ====================================================================-->
+-  <target name="ivy.check-releasable" depends="install-ivy, install-antcontrib">
++  <target name="ivy.check-releasable">
+     <if>
+       <istrue value="${release}" />
+       <then>
+@@ -630,7 +623,7 @@
+           depends="resolve-default, resolve-test, ivy.check-releasable"
+           description="Retrieves all the dependent libraries" />
+ 
+-  <target name="resolve-init" unless="resolve-init.skip" depends="install-ivy">
++  <target name="resolve-init" unless="resolve-init.skip">
+     <!-- If this is the 1st time through resolve-init, then we need to clean up the jars
+ -->
+     <antcall target="clean-jars" />
+@@ -665,7 +658,7 @@
+ 	    want to force IVY to go fetch all your project dependencies from scratch.
+ 	    WARNING: this will affect all IVY projects, not just the current workspace
+ 	    ====================================================================-->
+-  <target name="ivy-clean-cache" depends="install-ivy">
++  <target name="ivy-clean-cache">
+     <ivy:cleancache />
+   </target>
+ 
+@@ -678,7 +671,7 @@
+ 	    WARNING: this is a global action and will affect other IVY projects
+ 	    currently referencing a locally published dependency
+ 	    ====================================================================-->
+-  <target name="ivy-clean-local" depends="install-ivy">
++  <target name="ivy-clean-local">
+     <delete dir="${ivy.local.default.root}/" />
+   </target>
+ 
+@@ -690,8 +683,7 @@
+ 	    WARNING: this is a global action and will affect other IVY projects
+ 	    currently referencing a locally published dependency
+ 	    ====================================================================-->
+-  <target name="ivy-clean-pentaho"
+-          depends="install-ivy">
++  <target name="ivy-clean-pentaho">
+   	<mkdir dir="${ivy.local.default.root}" /> <!-- just in case it doesn't exist -->
+     <for param="dir">
+       <path>
+@@ -719,7 +711,7 @@
+ 	    
+ 	    Allows ivy to report on the dependencies for this project 
+ 	    ====================================================================-->
+-  <target name="report" depends="install-ivy">
++  <target name="report">
+     <ivy:resolve file="ivy.xml" />
+     <ivy:report conf="default" />
+   </target>
+@@ -732,7 +724,7 @@
+ 	    for download by other projects currently being executed on the user's
+ 	    system.
+ 	    ====================================================================-->
+-  <target name="publish-local-nojar" depends="install-ivy">
++  <target name="publish-local-nojar">
+     <ivy:resolve file="${ivy.artifact.ivyfilename}" />
+     <ivy:publish resolver="local" pubrevision="${project.revision}" overwrite="true" forcedeliver="true">
+       <artifacts pattern="${dist.dir}/[artifact]-[revision](-[classifier]).[ext]" />
+@@ -769,7 +761,7 @@
+ 	    Publishes the jar file for this project to a Maven2 repository.
+ 	    ====================================================================-->
+   <target name="publish-pentaho-nojar"
+-          depends="install-antcontrib,create-pom,ivy.deliver">
++          depends="create-pom,ivy.deliver">
+     <antcall target="maven-publish-dependencies">
+       <param name="publish.groupId" value="${ivy.artifact.group}" />
+       <param name="publish.artifactId" value="${ivy.artifact.id}" />
+@@ -946,7 +938,7 @@
+ 	    
+ 	    Creates the POM file for publishing the jar file to a Maven2 repository.
+ 	    ====================================================================-->
+-  <target name="create-pom" depends="install-ivy">
++  <target name="create-pom">
+     <ivy:makepom ivyfile="./ivy.xml" pomfile="${dist.dir}/pom.xml">
+       <mapping conf="default" scope="compile" />
+       <mapping conf="runtime" scope="runtime" />
+@@ -1043,7 +1035,7 @@
+ 	      - compile.post     : anything needed after the compile is done 
+ 	    ====================================================================-->
+   <target name="compile"
+-          depends="init, compile.pre, compile.compile, compile.src_copy, compile.res_copy, compile.lic_copy, compile.post"
++          depends="init, compile.pre, compile.compile, compile.src_copy, compile.lic_copy, compile.post"
+           description="Performs all the steps to prepare the bin directory with a complete compilation" />
+ 
+ 
+@@ -1065,6 +1057,7 @@
+            debug="${javac.debug}"
+            deprecation="${javac.deprecation}"
+            fork="true"
++           includeantruntime="false"
+            source="${javac.source}"
+            target="${javac.target}">
+       <classpath>
+@@ -1082,7 +1075,7 @@
+ 	    duplicate copying of resources from src tree (handled by compile.src_copy
+ 	    if jar.include.source is set.
+ 	    ====================================================================-->
+-  <target name="compile.res_copy" depends="install-antcontrib">
++  <target name="compile.res_copy">
+     <if>
+       <available file="${res.dir}" />
+       <then>
+@@ -1151,7 +1144,7 @@
+ 	    
+ 	    Creates a jar file from the bin directory
+ 	    ====================================================================-->
+-  <target name="jar" depends="compile,set-build.id,generate.manifest" description="Jars up the bin directory after a compile">
++  <target name="jar" depends="compile,generate.manifest" description="Jars up the bin directory after a compile">
+     <jar destfile="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" manifest="${dist.manifest.file}">
+       <fileset dir="${classes.dir}" />
+     </jar>
+@@ -1164,7 +1157,7 @@
+ 	    Creates a new manifest file if one is not specified, or updates
+ 	    an existing manifest file if one is specified.
+ 	    ====================================================================-->
+-  <target name="generate.manifest" depends="init,set-build.id">
++  <target name="generate.manifest" depends="init">
+     <delete file="${dist.manifest.file}" />
+     <touch file="${dist.manifest.file}" />
+     <copy file="${manifest.file}" tofile="${dist.manifest.file}" overwrite="true" failonerror="false" />
+@@ -1488,7 +1481,7 @@
+ 	    
+ 	    Retrieves Cobertura jar via IVY
+ 	    ====================================================================-->
+-  <target name="cobertura.download" depends="install-ivy" unless="cobertura.available">
++  <target name="cobertura.download" unless="cobertura.available">
+     <ivy:retrieve inline="true"
+                   organisation="net.sourceforge.cobertura"
+                   module="cobertura"
+@@ -1606,7 +1599,7 @@
+  
+         Fetches and installs Pentaho Ant tasks
+       ====================================================================-->
+-  <target name="install-pentaho-ant-tasks" depends="install-ivy">
++  <target name="install-pentaho-ant-tasks">
+     <ivy:retrieve inline="true"
+                   organisation="pentaho"
+                   module="pentaho-ant-tasks"
+@@ -1648,4 +1641,4 @@
+     </dot-classpath>
+   </target>
+ 
+-</project>
+\ No newline at end of file
++</project>

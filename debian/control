@@ -1,0 +1,40 @@
+Source: libfonts-java
+Section: java
+Priority: optional
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Uploaders: Rene Engelhard <rene@debian.org>
+Build-Depends: debhelper-compat (= 13),
+               default-jdk,
+               ant,
+               libloader-java,
+               libitext-java,
+               libbase-java,
+               libcommons-logging-java,
+               javahelper,
+               junit <!nocheck>,
+               ant-optional
+Standards-Version: 4.6.0
+Rules-Requires-Root: no
+Vcs-Git: https://salsa.debian.org/java-team/libfonts-java.git
+Vcs-Browser: https://salsa.debian.org/java-team/libfonts-java
+Homepage: http://jfreereport.sourceforge.net/
+
+Package: libfonts-java
+Architecture: all
+Depends: ${java:Depends},
+         ${misc:Depends}
+Suggests: libfonts-java-doc (= ${binary:Version})
+Description: Java fonts layouting library
+ LibFonts is a library developed to support advanced layouting and allows one 
+ to read TrueType-Font files to extract layouting specific information.
+
+Package: libfonts-java-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Multi-Arch: foreign
+Description: Java fonts layouting library -- documentation
+ LibFonts is a library developed to support advanced layouting and allows one
+ to read TrueType-Font files to extract layouting specific information.
+ .
+ This package contains the Javadoc.

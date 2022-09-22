@@ -1,0 +1,11 @@
+Document: libfonts-java
+Title: Programmer API for JFreeChart
+Author: Thomas Morgner, David Gilbert and others
+Abstract: This is the programmer API of libfonts a library developed to 
+ support advanced layouting and allows to read TrueType-Font files to 
+ extract layouting specific informations.
+Section: Programming
+
+Format: HTML
+Index: /usr/share/doc/libfonts-java/docs/api/index.html
+Files: /usr/share/doc/libfonts-java/docs/api/*.html

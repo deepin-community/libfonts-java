@@ -1,0 +1,4 @@
+version=4
+# opts=uversionmangle=s/-(rc\d*)/~$1/
+opts="repack,repacksuffix=+dfsg,repacksuffix=+dfsg,dversionmangle=s/[+.]dfsg[0-9]*//" \
+ http://sf.net/jfreereport/libfonts-([[:digit:].]+)\.tar\.gz debian uupdate

@@ -1,0 +1,41 @@
+#!/usr/bin/make -f
+
+export CLASSPATH=/usr/share/java/libbase.jar:/usr/share/java/itext.jar:/usr/share/java/commons-logging.jar:/usr/share/java/libloader.jar
+
+%:
+	dh $@ --with javahelper
+
+override_dh_clean:
+	dh_clean
+	-rm -rf build
+	-rm -rf javadoc
+	-rm -f libfonts-*.jar
+	# don't use them, go sure
+	-rm -f lib/* lib/optional/* test-lib/*
+	-rm -rf tempJar
+
+override_dh_auto_build:
+	dh_auto_build
+	# Manually copying the contents of some non-class files into the jar
+	mkdir tempJar/ && cd tempJar && \
+	        jar xf ../dist/libfonts-*.jar && \
+	        cp -r ../source/org/pentaho/reporting/libraries/fonts/encoding/generated org/pentaho/reporting/libraries/fonts/encoding && \
+	        cp -r ../source/org/pentaho/reporting/libraries/fonts/encoding/generator/encodings.properties org/pentaho/reporting/libraries/fonts/encoding/generator && \
+	        cp -r ../source/org/pentaho/reporting/libraries/fonts/text/generated org/pentaho/reporting/libraries/fonts/text && \
+	        cp -r ../source/org/pentaho/reporting/libraries/fonts/libfont.properties org/pentaho/reporting/libraries/fonts && \
+	        jar cf $$(basename ../dist/libfonts-*.jar) * && \
+	        cp libfonts-*.jar ../dist/
+	# Run javadoc target manually
+	ant -Duser.name debian javadoc
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	ant -Duser.name debian test
+endif
+
+override_dh_link:
+	dh_link
+	# Creating a libfonts.jar symlink to the installed jar.
+	nameJar=$$(find debian/libfonts-java/usr/share/java/ -name "*.jar") && \
+	        echo $$nameJar && \
+	        ln -s $$(basename $$nameJar) debian/libfonts-java/usr/share/java/libfonts.jar

@@ -1,0 +1,125 @@
+libfonts-java (1.1.6.dfsg2-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream version 1.1.6.dfsg2, repacking without the non-free (and also
+    useless) contents in the patches/ directory. (Closes: #992087)
+  * d/watch with version 4, also addings opts for the repack
+  * Depending on debhelper-compat 13, dropping compat 5 file (Closes: #965639)
+  * Vcs- fields now point to Salsa
+  * Standards version set to 4.6.0:
+    - Using Machine-readable 1.0 copyright format for d/copyright
+    - Rules-Requires-Root: no in d/control
+  * Refreshing d/copyright
+  * Now building with dh instead of cdbs
+  * Aligning the list of (build-)dependencies, adding missing commas
+  * Polishing suggests and recommends
+  * Acknowledging source format 3.0 (quilt) is now used
+  * Modifying d/rules to manually add some missing files in the jar
+  * Correcting spelling errors in d/control with the patch of Clayton Casciato
+    (Closes: #687364)
+  * Adding a Lintian override for embedded javascript
+
+ -- Pierre Gruet <pgt@debian.org>  Mon, 30 Aug 2021 14:07:06 +0200
+
+libfonts-java (1.1.6.dfsg-3.1) unstable; urgency=medium
+
+  * Non maintainer upload by the Reproducible Builds team.
+  * No source change upload to rebuild on buildd with .buildinfo files.
+
+ -- Holger Levsen <holger@debian.org>  Tue, 22 Dec 2020 00:17:33 +0100
+
+libfonts-java (1.1.6.dfsg-3) unstable; urgency=low
+
+  * add missing build-dep on ant-optional... (closes: #652799) 
+
+ -- Rene Engelhard <rene@debian.org>  Thu, 29 Dec 2011 23:12:17 +0100
+
+libfonts-java (1.1.6.dfsg-2) unstable; urgency=low
+
+  * merge libbase 1.1.6-2 changes 
+
+ -- Rene Engelhard <rene@debian.org>  Tue, 01 Nov 2011 15:04:02 +0000
+
+libfonts-java (1.1.6.dfsg-1) unstable; urgency=low
+
+  * remove test-lib/junit-3.8.1.jar
+  * build-depend on junit; prepare to and run ant test
+
+ -- Rene Engelhard <rene@debian.org>  Tue, 27 Sep 2011 22:02:44 +0000
+
+libfonts-java (1.1.6-1) unstable; urgency=low
+
+  * New upstream release
+  * switch back to Debian Java Maintainers, me as Uploader
+  * remove JRE depends
+  * add classpath to jar using jh_classpath
+  * use jh_depends / ${java:Depends}
+
+ -- Rene Engelhard <rene@debian.org>  Sun, 25 Sep 2011 19:23:39 +0000
+
+libfonts-java (0.3.3-4) unstable; urgency=low
+
+  * QA upload.
+  * Orphaning package.
+
+ -- Torsten Werner <twerner@debian.org>  Sun, 07 Aug 2011 18:37:00 +0200
+
+libfonts-java (0.3.3-3) unstable; urgency=low
+
+  [ Matthias Klose ]
+  * (Build-)depend on default-jre/-jdk.
+
+  [ Torsten Werner ]
+  * Add myself to Uploaders.
+  * Add missing Depends: ${misc:Depends}.
+  * Change Section: java.
+  * Update Standards-Version: 3.8.2.
+
+ -- Torsten Werner <twerner@debian.org>  Sun, 02 Aug 2009 22:59:30 +0200
+
+libfonts-java (0.3.3-2) unstable; urgency=low
+
+  * upload to unstable 
+
+ -- Rene Engelhard <rene@debian.org>  Thu, 14 Feb 2008 23:48:55 +0100
+
+libfonts-java (0.3.3-1) experimental; urgency=low
+
+  * New upstream release
+
+ -- Rene Engelhard <rene@debian.org>  Sat, 29 Dec 2007 18:19:09 +0100
+
+libfonts-java (0.2.6-2) unstable; urgency=low
+
+  [ Kumar Appaiah ]
+  * debian/control:
+    + Add XS-Vcs-Svn and XS-Vcs-Browser.
+    + Add Homepage field.
+  * Updated watch file to use uscan SourceForge alias.
+
+  [ Michael Koch ]
+  * Updated Standards-Version to 3.7.3.
+  * Renamed XS-Vcs-* fields to Vcs-*.
+  * Added myself to Uploaders and removed Wolfgang.
+  * Updated Build-Depends on debhelper to require version > 5.
+
+ -- Michael Koch <konqueror@gmx.de>  Fri, 28 Dec 2007 00:11:37 +0100
+
+libfonts-java (0.2.6-1) unstable; urgency=low
+
+  * New upstream release
+  * add myself to Uploaders:
+  * (build)depend on libjcommon-java (>= 1.0.10-1) and libloader-java
+  * Build-Depends-Indep -> Build-Depends:
+  * split javadoc out into an own package
+  * move to debhelper compat 5
+  * add debian/watch
+  * use DEB_UPSTREAM_VERSION
+
+ -- Rene Engelhard <rene@debian.org>  Fri, 12 Oct 2007 23:19:37 +0200
+
+libfonts-java (0.1.4-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Wolfgang Baer <WBaer@gmx.de>  Thu, 02 Feb 2006 15:48:42 +0100
